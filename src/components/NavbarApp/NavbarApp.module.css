@@ -1,0 +1,21 @@
+.navbar {
+    display: flex;
+    padding: 2%;
+    background-color: blueviolet;
+}
+.inactive {
+    margin: 0 2%;
+    text-decoration: none;
+    font-size: 20px;
+    color: white
+}
+.inactive:hover {
+    color: black;
+    text-decoration: underline;
+}
+.active {
+    text-decoration: underline;
+    color: black;
+    margin: 0 2%;
+    font-size: 20px;
+}

@@ -1,13 +1,20 @@
-import { Button, Group, Modal } from '@mantine/core';
 import React, { useEffect, useState } from 'react'
-import DeletePosts from '../DeletePosts/DeletePosts';
-import UpdatePsots from '../UpdatePosts/UpdatePosts';
+import { Card, Group, Image, SimpleGrid, Text, useMantineTheme } from '@mantine/core'
+import DeletePosts from '../DeletePosts/DeletePosts'
+import EditPosts from '../EditPosts/EditPosts'
 
 const GetPosts = () => {
 
   const [postsData, setPostsData] = useState()
   const [loaded, setLoaded] = useState(false)
-  const [opened, setOpened] = useState(false)
+  const [change, setChange] = useState(false)
+
+  useEffect(() => {
+    if (change) {
+      getPostsData()
+      setChange(false)
+    }
+  }, [change])
 
   const getPostsData = async () => {
     const response = await fetch('http://localhost:5500/posts')
@@ -16,36 +23,51 @@ const GetPosts = () => {
       setLoaded(true)
   };
 
-
   useEffect(() => {
     getPostsData()
   }, [setPostsData])
 
+  const theme = useMantineTheme()
+
+  const secondaryColor = theme.colorScheme === 'dark' ? theme.colors.dark[1] : theme.colors.gray[7]
 
   return (
-    <div>
-      {loaded && postsData.map(post => {
-        return(
-          <div key={post._id}>
-            <p>{post.author}</p>
-            <p>{post.message}</p>
-            <p>{post.date}</p>
-            <UpdatePsots post={post} />
-            <Modal 
-              opened={opened}
-              onClose={() => setOpened(false)}
-              title="Are you sure ?"
-              withCloseButton={true}
-            >
-              <DeletePosts id={post._id} />
-            </Modal>
-            <Group position="left">
-              <Button onClick={() => setOpened(true)}>Delete Post</Button>
-            </Group>
+    <SimpleGrid
+      cols={4}
+      spacing="lg"
+      breakpoints={[
+        { maxWidth: 980, cols: 3, spacing: 'md' },
+        { maxWidth: 755, cols: 2, spacing: 'sm' },
+        { maxWidth: 600, cols: 1, spacing: 'sm' },
+      ]}
+    >
+      {
+      loaded && postsData.map(post => {
+        return (
+          <div style={{ width: 340, margin: 'auto' }} key={post._id}>
+            <Card shadow="sm" p="lg">
+              <Card.Section>
+                <Image src="https://loremflickr.com/320/240/dog" height={160} alt="Norway" />
+              </Card.Section>
+
+              <Group position="apart" style={{ marginBottom: 5, marginTop: theme.spacing.sm }}>
+                <Text weight={500}>{post.author}</Text>
+              </Group>
+
+              <Text size="sm" style={{ color: secondaryColor, lineHeight: 1.5 }}>
+                {post.message}
+              </Text>
+
+              <Group position="apart" style={{ marginBottom: 5, marginTop: theme.spacing.sm }}>
+                <EditPosts post={post} status={setChange} />
+                <DeletePosts post={post} status={setChange} />
+              </Group>
+            </Card>
           </div>
         )
-      })}
-    </div>
+      })
+    }
+    </SimpleGrid>
   )
 }
 

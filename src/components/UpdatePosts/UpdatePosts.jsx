@@ -1,3 +1,4 @@
+import { Button } from '@mantine/core'
 import React, { useState } from 'react'
 
 const UpdatePsots = ({ post }) => {
@@ -10,8 +11,8 @@ const UpdatePsots = ({ post }) => {
   }
 
   const data = {
-    author: author,
-    message: message
+    author,
+    message
   }
 
   const updatePostFetchRequest = (id) => {
@@ -40,7 +41,7 @@ const UpdatePsots = ({ post }) => {
         <br />
         <label htmlFor="message">Message</label>
         <input type="text"  value={message} onChange={(e) => setMessage(e.target.value)}/>
-        <button type="button" onClick={() => onClickPost()}>Update post</button>
+        <Button type="button" onClick={() => onClickPost()}>Update post</Button>
       </form>
     </div>
   )
